@@ -18,6 +18,17 @@ func WebInit(g *gin.Engine) {
 	if global.Config.App.WebClient == 1 {
 		g.StaticFS("/webclient", http.Dir(global.Config.Gin.ResourcesPath+"/web"))
 		g.StaticFS("/webclient2", http.Dir(global.Config.Gin.ResourcesPath+"/web2"))
+		webclient3Index := global.Config.Gin.ResourcesPath + "/web3/index.html"
+		g.GET("/webclient3", func(c *gin.Context) {
+			c.File(webclient3Index)
+		})
+		g.GET("/webclient3/", func(c *gin.Context) {
+			c.File(webclient3Index)
+		})
+		g.GET("/webclient3/index.html", func(c *gin.Context) {
+			c.File(webclient3Index)
+		})
+		g.StaticFS("/webclient3", http.Dir(global.Config.Gin.ResourcesPath+"/web"))
 	}
 	g.StaticFS("/_admin", http.Dir(global.Config.Gin.ResourcesPath+"/admin"))
 }
