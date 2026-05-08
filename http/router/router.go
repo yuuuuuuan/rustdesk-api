@@ -19,16 +19,18 @@ func WebInit(g *gin.Engine) {
 		g.StaticFS("/webclient", http.Dir(global.Config.Gin.ResourcesPath+"/web"))
 		g.StaticFS("/webclient2", http.Dir(global.Config.Gin.ResourcesPath+"/web2"))
 		webclient3Index := global.Config.Gin.ResourcesPath + "/web3/index.html"
+		webclient3Files := http.StripPrefix("/webclient3", http.FileServer(http.Dir(global.Config.Gin.ResourcesPath+"/web")))
 		g.GET("/webclient3", func(c *gin.Context) {
 			c.File(webclient3Index)
 		})
-		g.GET("/webclient3/", func(c *gin.Context) {
-			c.File(webclient3Index)
+		g.GET("/webclient3/*filepath", func(c *gin.Context) {
+			switch c.Param("filepath") {
+			case "", "/", "/index.html":
+				c.File(webclient3Index)
+			default:
+				webclient3Files.ServeHTTP(c.Writer, c.Request)
+			}
 		})
-		g.GET("/webclient3/index.html", func(c *gin.Context) {
-			c.File(webclient3Index)
-		})
-		g.StaticFS("/webclient3", http.Dir(global.Config.Gin.ResourcesPath+"/web"))
 	}
 	g.StaticFS("/_admin", http.Dir(global.Config.Gin.ResourcesPath+"/admin"))
 }
