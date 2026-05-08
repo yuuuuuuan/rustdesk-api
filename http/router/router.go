@@ -17,18 +17,17 @@ func WebInit(g *gin.Engine) {
 
 	if global.Config.App.WebClient == 1 {
 		g.StaticFS("/webclient", http.Dir(global.Config.Gin.ResourcesPath+"/web"))
-		g.StaticFS("/webclient2", http.Dir(global.Config.Gin.ResourcesPath+"/web2"))
-		webclient3Index := global.Config.Gin.ResourcesPath + "/web3/index.html"
-		webclient3Files := http.StripPrefix("/webclient3", http.FileServer(http.Dir(global.Config.Gin.ResourcesPath+"/web")))
-		g.GET("/webclient3", func(c *gin.Context) {
-			c.File(webclient3Index)
+		webclient2Index := global.Config.Gin.ResourcesPath + "/web2/index.html"
+		webclient2Files := http.StripPrefix("/webclient2", http.FileServer(http.Dir(global.Config.Gin.ResourcesPath+"/web")))
+		g.GET("/webclient2", func(c *gin.Context) {
+			c.File(webclient2Index)
 		})
-		g.GET("/webclient3/*filepath", func(c *gin.Context) {
+		g.GET("/webclient2/*filepath", func(c *gin.Context) {
 			switch c.Param("filepath") {
 			case "", "/", "/index.html":
-				c.File(webclient3Index)
+				c.File(webclient2Index)
 			default:
-				webclient3Files.ServeHTTP(c.Writer, c.Request)
+				webclient2Files.ServeHTTP(c.Writer, c.Request)
 			}
 		})
 	}
